@@ -13,75 +13,315 @@ On a retail website, the following discounts apply:
 ### UML Class Diagram
 ![UML-CLASS-DIAGRAM](./docs/img/class_diagram.png)
 
+### Involved Technologies
+
+* maven
+* spring boot
+* H2 database
+* lombok
+* hibernate jpa
+* jacoco
+* spring mvc
+* REST API
+* swagger
+* mockito 
+
+### How to run the project?
+
+* 1st solution: import the project into your workspace and run it as boot project
+* 2nd solution: run the command 
+
+```
+mvn install a
+```
+  after that  in terminal windows run the following command
+  
+```
+./mvnw spring-boot:run
+```
+
+* browse to [http://localhost:8080/](http://localhost:8080/)   to open the home page
+![HOME-PAGE](./docs/img/home-page.png)
+
 ### JACOCO Coverage Report 
 
 To run the Test and Generate the coverage report, run the following Maven command. 
 
-* mvn clean test
+```
+mvn clean test
+```
+To have an idea about the generated HTML report you can download  [jacoco report](./docs/jacoco/index.html) 
 
-To have an idea about the generated you can see the generated  [jacoco report](./docs/jacoco/index.html) 
+![jacoco-report](./docs/img/jacoco-coverage.png)
 
-* [Installing and running the application](./docs/install.md)
-* [Continuous Integration](./docs/ci-cd.md)
+### Access and check H2 Database
 
-## What's next
+H2 in memory database start automatically once the app starts and initiate "shop" schema;
 
-* [ ] build integration test
-* [ ] provide proper JSDOCS
-* [ ] automatic deploy to AWS
-* [ ] harden to code to make it production ready, exception handling etc 
-  * [ ] ensure node remains running pm2?
-  * [ ] remove mock services and implement them
-  * [ ] security, login with OAuth?
-* [ ] improve code coverage
-* [ ] ...
+* after starting the string boot app browse to [http://localhost:8080/h2-console/](http://localhost:8080/h2-console/) 
 
-
-## Using the graphql editor
-
-* Browse to [http://127.0.0.1:4000/graphql](http://127.0.0.1:4000/graphql)
-* Add the following query
+* use the following database configuration
 
 ```
-query ($userId: String!) {
-  user(id:$userId) {
-    id
-    userProfile {
-      segment
-      userSince
-    }
-    basket {
-      products{
-        productType
-        amount
-      },
-      priceBreakdown{
-        payableAmount
-        totalAmount
-        totalReductions
-        reductions {
-          amount
-          description
-        }
-      }
-    }
-  }
-}
+Saved Settings:Generic H2 (Embedded)
+Setting Name:Generic H2 (Embedded)
+  
+Driver Class:org.h2.Driver
+JDBC URL:jdbc:h2:mem:shopdb
+User Name:sa
+Password:password
 ```
 
-* And the following query variables
+![H2-CONSOLE](./docs/img/h2-console.png)
+
+![SHOP-SCHEMA](./docs/img/shop-schema.png)
+
+## Swagger UI
+
+* Allows you to test the REST API via a user friendly interface
+![SHOP-SCHEMA](./docs/img/swagger-ui.png)
+
+* Example of REST CALL : [http://localhost:8080/order/1]([http://localhost:8080/order/1)	
+fetch the related Order from the database, including the related informations of USER, LINE ITEMS and PRODUCTS	
 
 ```
 {
-  "userId": "1"
+  "orderId": 1,
+  "lineItems": [
+    {
+      "id": {
+        "orderId": 1,
+        "productId": 7
+      },
+      "product": {
+        "productId": 7,
+        "name": "Nutella",
+        "unitPrice": 22.2,
+        "productType": "GROCERIES"
+      },
+      "quantity": 1,
+      "unitPrice": 22.2,
+      "lineAmount": 22.2
+    },
+    {
+      "id": {
+        "orderId": 1,
+        "productId": 1
+      },
+      "product": {
+        "productId": 1,
+        "name": "IPhone X",
+        "unitPrice": 1099.99,
+        "productType": "OTHERS"
+      },
+      "quantity": 1,
+      "unitPrice": 1099.99,
+      "lineAmount": 1099.99
+    },
+    {
+      "id": {
+        "orderId": 1,
+        "productId": 8
+      },
+      "product": {
+        "productId": 8,
+        "name": "Mixed Nuts",
+        "unitPrice": 15.25,
+        "productType": "GROCERIES"
+      },
+      "quantity": 3,
+      "unitPrice": 15.25,
+      "lineAmount": 45.75
+    },
+    {
+      "id": {
+        "orderId": 1,
+        "productId": 9
+      },
+      "product": {
+        "productId": 9,
+        "name": "Nescafe Gold",
+        "unitPrice": 12.99,
+        "productType": "GROCERIES"
+      },
+      "quantity": 2,
+      "unitPrice": 12.99,
+      "lineAmount": 25.98
+    },
+    {
+      "id": {
+        "orderId": 1,
+        "productId": 2
+      },
+      "product": {
+        "productId": 2,
+        "name": "Flash Drive",
+        "unitPrice": 25.5,
+        "productType": "OTHERS"
+      },
+      "quantity": 2,
+      "unitPrice": 25.5,
+      "lineAmount": 51
+    },
+    {
+      "id": {
+        "orderId": 1,
+        "productId": 3
+      },
+      "product": {
+        "productId": 3,
+        "name": "Webcam",
+        "unitPrice": 29.99,
+        "productType": "OTHERS"
+      },
+      "quantity": 1,
+      "unitPrice": 29.99,
+      "lineAmount": 29.99
+    }
+  ],
+  "user": {
+    "userId": 1,
+    "userType": "AFFILIATE",
+    "firstName": "Kamel",
+    "lastName": "Haddad",
+    "registrationDate": "2020-06-28T04:15:10.148+00:00"
+  },
+  "orderDate": "2020-06-28T04:15:10.157+00:00",
+  "billed": true
 }
 ```
 
-* Now run the query
+* Example of REST CALL : [http://localhost:8080/order/2/bill](http://localhost:8080/order/2/bill)
+Generate a BILL associated to the entered oderID, calculate the discounts and payable amount, insert the bill information and related discounts in the database and then mention the order as billed so for the next call the API just fetch the BILL from database
 
-The following mocked users are available
+```
+{
+  "billId": 2,
+  "order": {
+    "orderId": 2,
+    "lineItems": [
+      {
+        "id": {
+          "orderId": 2,
+          "productId": 3
+        },
+        "product": {
+          "productId": 3,
+          "name": "Webcam",
+          "unitPrice": 29.99,
+          "productType": "OTHERS"
+        },
+        "quantity": 1,
+        "unitPrice": 29.99,
+        "lineAmount": 29.99
+      },
+      {
+        "id": {
+          "orderId": 2,
+          "productId": 2
+        },
+        "product": {
+          "productId": 2,
+          "name": "Flash Drive",
+          "unitPrice": 25.5,
+          "productType": "OTHERS"
+        },
+        "quantity": 2,
+        "unitPrice": 25.5,
+        "lineAmount": 51
+      },
+      {
+        "id": {
+          "orderId": 2,
+          "productId": 4
+        },
+        "product": {
+          "productId": 4,
+          "name": "Laptop",
+          "unitPrice": 762,
+          "productType": "OTHERS"
+        },
+        "quantity": 1,
+        "unitPrice": 762,
+        "lineAmount": 762
+      },
+      {
+        "id": {
+          "orderId": 2,
+          "productId": 9
+        },
+        "product": {
+          "productId": 9,
+          "name": "Nescafe Gold",
+          "unitPrice": 12.99,
+          "productType": "GROCERIES"
+        },
+        "quantity": 2,
+        "unitPrice": 12.99,
+        "lineAmount": 25.98
+      },
+      {
+        "id": {
+          "orderId": 2,
+          "productId": 10
+        },
+        "product": {
+          "productId": 10,
+          "name": "Pringles Chips",
+          "unitPrice": 8.4,
+          "productType": "GROCERIES"
+        },
+        "quantity": 4,
+        "unitPrice": 8.4,
+        "lineAmount": 33.6
+      },
+      {
+        "id": {
+          "orderId": 2,
+          "productId": 8
+        },
+        "product": {
+          "productId": 8,
+          "name": "Mixed Nuts",
+          "unitPrice": 15.25,
+          "productType": "GROCERIES"
+        },
+        "quantity": 3,
+        "unitPrice": 15.25,
+        "lineAmount": 45.75
+      }
+    ],
+    "user": {
+      "userId": 2,
+      "userType": "EMPLOYEE",
+      "firstName": "Amer",
+      "lastName": "Asha",
+      "registrationDate": "2017-06-20T15:00:00.000+00:00"
+    },
+    "orderDate": "2020-06-28T04:15:10.157+00:00",
+    "billed": true
+  },
+  "discounts": [
+    {
+      "discountId": 3,
+      "description": "For every $100 on the bill, there is $5 discount",
+      "discountAmount": 45
+    },
+    {
+      "discountId": 4,
+      "description": "EMPLOYEE has a discount of 30% on non-groceries items",
+      "discountAmount": 252.9
+    }
+  ],
+  "billingAddress": "dummy address",
+  "shippingAddress": "dummy address",
+  "totalDiscount": 297.9,
+  "totalAmount": 948.32,
+  "totalNonGroceriesAmount": 842.99,
+  "payableAmount": 650.42
+}
+```
 
-0. Employee (userId = 0)
-1. Affiliate (userId = 1)
-2. Customer with more than 2 years loyalty (userId = 2)
-3. Customer wiht less than 2 years loyalty (userId = 3)
+
+## Business Concept
+
