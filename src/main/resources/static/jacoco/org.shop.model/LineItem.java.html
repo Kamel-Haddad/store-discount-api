@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LineItem.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">store-discount-api</a> &gt; <a href="index.source.html" class="el_package">org.shop.model</a> &gt; <span class="el_source">LineItem.java</span></div><h1>LineItem.java</h1><pre class="source lang-java linenums">package org.shop.model;
+
+import java.math.BigDecimal;
+
+import javax.persistence.CascadeType;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
+import javax.persistence.Table;
+
+import org.shop.model.key.LineItemKey;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import lombok.Getter;
+import lombok.Setter;
+
+
+@Entity
+@Table(name = &quot;line_items&quot;, schema = &quot;shop&quot;)
+<span class="nc" id="L25">@Getter @Setter</span>
+<span class="nc" id="L26">public class LineItem {</span>
+	@EmbeddedId
+<span class="nc" id="L28">	private LineItemKey id;</span>
+	
+	@JsonBackReference
+	@ManyToOne
+    @MapsId(&quot;order_id&quot;)
+    @JoinColumn(name = &quot;order_id&quot;)
+<span class="nc" id="L34">    Order order;</span>
+ 
+	@JsonManagedReference
+	@ManyToOne
+    @MapsId(&quot;product_id&quot;)
+    @JoinColumn(name = &quot;product_id&quot;)
+<span class="nc" id="L40">    Product product;</span>
+	
+<span class="nc" id="L42">	private Integer quantity;</span>
+	
+<span class="nc" id="L44">	private BigDecimal unitPrice;</span>
+	
+	/**
+	 * return the total amount for a Line Item &lt;br/&gt;
+	 * total amount = unitPrice * quantity
+	 * @return
+	 */
+	public BigDecimal getLineAmount() {
+<span class="nc" id="L52">		return unitPrice.multiply(new BigDecimal(quantity));</span>
+	}
+	
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
