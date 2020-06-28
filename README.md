@@ -10,9 +10,8 @@ On a retail website, the following discounts apply:
 5. The percentage based discounts do not apply on groceries.
 6. A user can get only one of the percentage based discounts on a bill.
 
-![home-screen](./docs/img/home-screen.png)
-![graphql-client](./docs/img/graphql-client.png)
-![class-explorer](./docs/img/class-diagram-dynamic.png)
+**UML Class Diagram
+![UML-CLASS-DIAGRAM](./docs/img/class_diagram.png)
 
 Traditionally in programming languages like Java, Python an OOP style approach would be taken.
 However in this sample takes a more standard javascript approach. Which will evolve through time. 
