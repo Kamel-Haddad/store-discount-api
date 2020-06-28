@@ -52,7 +52,7 @@ mvn clean test
 ```
 To have an idea about the generated HTML report you can download  [jacoco report](./docs/jacoco/index.html) 
 
-![jacoco-report](./docs/img/jacoco-coverage.png)
+![jacoco-report](./docs/img/jacoco-coverage-report.png)
 
 ### Access and check H2 Database
 
