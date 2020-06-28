@@ -10,12 +10,13 @@ On a retail website, the following discounts apply:
 5. The percentage based discounts do not apply on groceries.
 6. A user can get only one of the percentage based discounts on a bill.
 
-###UML Class Diagram
+### UML Class Diagram
 ![UML-CLASS-DIAGRAM](./docs/img/class_diagram.png)
 
-###JACOCO Coverage Report 
+### JACOCO Coverage Report 
 
 To run the Test and Generate the coverage report, run the following Maven command. 
+
 * mvn clean test
 
 To have an idea about the generated you can see the generated  [jacoco report](./docs/jacoco/index.html) 
